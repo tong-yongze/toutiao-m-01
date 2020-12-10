@@ -9,11 +9,14 @@ import Vant from 'vant'
 // 加载 Vant 全局样式
 import 'vant/lib/index.css'
 
-// 注册使用 Vant 组件库
-Vue.use(Vant)
+// 加载动态设计 REM 基准值
+import 'amfe-flexible'
 
 // 加载全局样式
-import  './styles/index.less'
+import './styles/index.less'
+
+// 注册使用 Vant 组件库
+Vue.use(Vant)
 
 Vue.config.productionTip = false
 
