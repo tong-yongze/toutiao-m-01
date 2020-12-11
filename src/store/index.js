@@ -13,10 +13,10 @@ export default new Vuex.Store({
     // user: null
   },
   mutations: {
-    setUser(state, data) {
-      state.user = data;
-      setItem(TOKEN_KEY, state.user);
+    setUser (state, data) {
+      state.user = data
       // 为了防止刷新丢失 我们需要把数据备份到本地存储
+      setItem(TOKEN_KEY, state.user);
       // window.localStorage.setItem(TOKEN_KEY,JSON.stringify(state.user))
     },
   },

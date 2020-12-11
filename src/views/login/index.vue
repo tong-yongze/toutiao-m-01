@@ -31,7 +31,7 @@
         type="number"
         maxlength="11"
       >
-        <i slot="left-icon" class="toutiao toutiao-shouji"></i>
+        <i slot="left-icon" class="font_family icon-shouji"></i>
       </van-field>
       <van-field
         v-model="user.code"
@@ -41,7 +41,7 @@
         type="number"
         maxlength="6"
       >
-        <i slot="left-icon" class="toutiao toutiao-yanzhengma"></i>
+        <i slot="left-icon" class="font_family icon-yanzhengma"></i>
         <template #button>
           <!--
             time: 倒计时时间
@@ -83,8 +83,8 @@ export default {
   data () {
     return {
       user: {
-        mobile: '13911111111', // 手机号
-        code: '246810' // 验证码
+        mobile: '', // 手机号
+        code: '' // 验证码
       },
       userFormRules: {
         mobile: [{
@@ -151,7 +151,10 @@ export default {
       try {
         await sendSms(this.user.mobile)
         this.$toast('发送成功')
+        // const res =await sendSms(this.user.mobile)
+        // console.log('发送成功',res);
       } catch (err) {
+        // console.log('发送失败',err);
         // 发送失败，关闭倒计时
         this.isCountDownShow = false
         if (err.response.status === 429) {
@@ -160,15 +163,14 @@ export default {
           this.$toast('发送失败，请稍后重试')
         }
       }
-    },
-
+    }
   }
 }
 </script>
 
 <style scoped lang="less">
 .login-container {
-  .toutiao {
+  .font_family{
     font-size: 37px;
   }
 
