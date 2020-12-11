@@ -39,7 +39,7 @@
            -->
           <van-count-down
           v-if="isCountDownShow"
-          :time="1000 * 5"
+          :time="1000 * 5 "
           format="ss s"
           @finish = "isCountDownShow = false"
           />
@@ -66,7 +66,7 @@
   </div>
 </template>
 <script>
-import { login } from '@/api/user';
+import { login ,sendSms } from '@/api/user';
 export default {
   name: 'LoginIndex',
   components: {},
@@ -112,13 +112,14 @@ export default {
       this.$toast.loading({
         message: '登录中...',
         forbidClick: true, // 禁用背景点击
-        duration: 2000, // 持续事件 默认是2000 ，如果为0 则持续展示
+        duration: 0, // 持续事件 默认是2000 ，如果为0 则持续展示
       });
 
       // 3. 提交表单请求登录
       try {
-        const res = await login(user);
-        console.log('登录成功', res);
+        const { data } = await login(this.user);
+        // console.log('登录成功', res);
+        this.$store.commit('setUser',data.data)
         this.$toast.success('登录成功');
       } catch (err) {
         if (err.response.status === 400) {
@@ -136,13 +137,26 @@ export default {
       try {
         await this.$refs.loginForm.validate('mobile')
         console.log('验证成功');
-      } catch (error) {
+      } catch (err) {
        return console.log('验证失败', err);
       }
 
       // 2.验证通过 显示倒计时
       this.isCountDownShow = true
       // 3.请求发送验证码
+      try {
+      await sendSms(this.user.mobile)
+      this.$toast('发送成功')
+      } catch (err) {
+        // 发送失败 关闭倒计时
+        this.isCountDownShow = false
+        // console.log('发送失败',err);
+        if(err.response.status === 429){
+          this.$toast('发送太频繁了，请稍后重试')
+        }else {
+          this.$toast('发送失败，请稍后重试')
+        }
+      }
     }
   },
 };
