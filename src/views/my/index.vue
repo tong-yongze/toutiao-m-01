@@ -39,9 +39,15 @@
 
     <!-- 未登录头部 -->
     <div v-else class="header not-login">
+      <!-- 第一种方案 还是会存在上一个页面为其他页面 也会进入本登录页面 进入或者退出都不相关的页面内容 -->
       <!-- <div class="login-btn" @click="$router.push('/login')"> -->
-      <div class="login-btn" @click="$router.push({name:'login',query:{
-        redirect:'/my'}})">
+      <!-- 第二种方案的优化 更加严谨 在login里面判断 只有传递了参数才会显示返回按钮 优化登录页面的操作 -->
+      <div class="login-btn"
+      @click="$router.push({
+        name:'login',
+        query:{
+        redirect:'/my'
+        }})">
         <img
         class="mobile-img"
         src="~@/assets/mobile.png" alt="" />
@@ -85,8 +91,8 @@ export default {
   },
   watch: {},
   created() {
+     // 如果用户登录了 ，则请求加载用户信息数据
     if (this.user) {
-      // 如果用户登录了 ，则请求加载用户信息数据
       this.loadUserInfo(); // 调用加载
     }
   },
@@ -98,7 +104,7 @@ export default {
       this.$dialog
         .confirm({
           title: '确认退出吗？',
-          message: '弹窗内容',
+          // message: '弹窗内容',
         })
         .then(() => {
           // on confirm
