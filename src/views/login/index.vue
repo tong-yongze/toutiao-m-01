@@ -88,7 +88,7 @@ export default {
   data () {
     return {
       user: {
-        mobile: '13511111454', // 手机号
+        mobile: '13911111113', // 手机号
         code: '246810' // 验证码
       },
       userFormRules: {

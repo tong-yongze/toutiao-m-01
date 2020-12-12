@@ -13,12 +13,11 @@
       通过 swipeable 属性可以开启滑动切换标签页。
      -->
     <van-tabs class="channel-tabs" v-model="active" animated swipeable>
-      <van-tab title="标签 1">内容 1</van-tab>
-      <van-tab title="标签 2">内容 2</van-tab>
-      <van-tab title="标签 3">内容 3</van-tab>
-      <van-tab title="标签 4">内容 4</van-tab>
-      <van-tab title="标签 5">内容 5</van-tab>
-      <van-tab title="标签 6">内容 6</van-tab>
+      <van-tab
+      :title="channel.name"
+      v-for="channel in channels"
+      :key="channel.id"
+      >{{channel.name}}的内容</van-tab>
       <div slot="nav-right" class="placeholder"></div>
       <div slot="nav-right" class="hamburger-btn">
         <i class="font_family icon-gengduo"></i>
@@ -29,20 +28,35 @@
 </template>
 
 <script>
+import {getUserChannel} from '@/api/user'
 export default {
   name: 'HomeIndex',
   components: {},
   props: {},
   data() {
     return {
-      active: 2,
+      active: 0,
+      channels:[]  // 频道列表
     };
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    // 加载用户数据
+    this.loadChannels()
+  },
   mounted() {},
-  methods: {},
+  methods: {
+  async  loadChannels(){
+    try {
+      const {data } = await getUserChannel()
+      // console.log(data);
+      this.channels = data.data.channels
+    } catch (err) {
+      this.$toast('获取频道数据失败')
+    }
+  }
+  },
 };
 </script>
 <style scoped lang="less">
