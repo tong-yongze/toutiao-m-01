@@ -1,15 +1,20 @@
 <template>
   <div class="login-container">
     <!-- 导航栏 -->
-    <van-nav-bar
+    <!-- <van-nav-bar
       class="page-nav-bar"
       title="登录"
     >
+    第一种方式：跳转到原来页面但是会有问题 当上一个页面不是登录页 返回的是其他无关页面
       <van-icon
         slot="left"
         name="cross"
         @click="$router.back()"
       />
+    </van-nav-bar> -->
+     <van-nav-bar class="page-nav-bar" title="登录">
+      <!-- 只有传递了 redirect 这样一个参数，才显示返回按钮 所有进入到登陆页面的操作都要携带 redirect参数 修复bug-->
+      <van-icon v-if="$route.query.redirect" slot="left" name="cross" @click="$router.back()" />
     </van-nav-bar>
     <!-- /导航栏 -->
 
@@ -83,8 +88,8 @@ export default {
   data () {
     return {
       user: {
-        mobile: '', // 手机号
-        code: '' // 验证码
+        mobile: '13511111454', // 手机号
+        code: '246810' // 验证码
       },
       userFormRules: {
         mobile: [{
@@ -111,7 +116,7 @@ export default {
   mounted () {},
   methods: {
     async onSubmit () {
-      // 1. 展示登陆中 loading
+      // 1. 展示登录中 loading
       this.$toast.loading({
         message: '登录中...',
         forbidClick: true, // 禁用背景点击

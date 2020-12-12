@@ -3,7 +3,8 @@
  */
 // import request from '../utils/request'
 import request from '@/utils/request'
-
+// 加载容器模块
+import store from '@/store'
 export const login = data => {
   return request({
    method:'POST',
@@ -21,5 +22,21 @@ export const sendSms = mobile => {
    method: 'GET',
    url: `/app/v1_0/sms/codes/${mobile}`,
 
+  })
+}
+
+/**
+ * 获取用户自己的信息
+ */
+export const getUserInfo = () => {
+  return request({
+   method: 'GET',
+   url: '/app/v1_0/user',
+   // 发送请求头数据
+    Headers:{
+      // 注意： 该接口需要授权才能访问
+      // token 的数据格式Bearer token数据 注意Bearer 后面有个空格
+      Authorization: `Bearer ${store.state.user.token}`
+    }
   })
 }
