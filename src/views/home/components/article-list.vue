@@ -8,6 +8,8 @@
       -->
     <van-pull-refresh
     v-model="isreFreshLoading"
+    :success-text="refresgSuccessText"
+    success-duration = "1500"
     @refresh="onRefresh"
     >
     <van-list
@@ -46,7 +48,8 @@ export default {
       finished: false, // 控制数据加载结束的状态
       timestamp : null, // 请求获取下一页数据的时间戳
       error: false, // 控制列表加载失败的提示状态
-      isreFreshLoading :false  // 控制下拉刷新的 loading 状态
+      isreFreshLoading :false,  // 控制下拉刷新的 loading 状态
+      refresgSuccessText: '刷新成功' // 下拉刷新成功提示文本
     };
   },
   methods: {
@@ -90,6 +93,33 @@ export default {
         this.loading = false
       }
 
+    },
+
+    // 当下拉刷新的时候会触发会调用该函数
+  async  onRefresh (){
+    try {
+       // 1.请求获取数据
+          const {data} = await getArticles({
+            channel_id: this.channel.id,   // 频道ID
+            timestamp: Date.now(), //  下拉刷新 每次请求获取最新数据 所以传递最新时间戳
+            with_top: 1
+          })
+
+      // 2.将数据追加到列表的顶部
+      const {results} = data.data
+      this.list.unshift(...results)
+
+      // 3.关闭下拉刷新的 loading 状态
+      this.isreFreshLoading = false
+
+        // 更新下拉刷新成功提示的文本
+          this.refresgSuccessText = `刷新成功,更新了${results.length}条数据`
+    } catch (err) {
+      // console.log('请求失败',err);
+      this.isreFreshLoading = false
+      this.refresgSuccessText = '刷新失败'
+
+    }
     }
   }
 }
