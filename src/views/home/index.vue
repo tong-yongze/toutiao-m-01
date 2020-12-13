@@ -13,11 +13,13 @@
       通过 swipeable 属性可以开启滑动切换标签页。
      -->
     <van-tabs class="channel-tabs" v-model="active" animated swipeable>
-      <van-tab
-      :title="channel.name"
+      <van-tab :title="channel.name"
       v-for="channel in channels"
-      :key="channel.id"
-      >{{channel.name}}的内容</van-tab>
+      :key="channel.id">
+      <!-- 文章列表 -->
+        <article-list :channel="channel"/>
+      <!-- /文章列表 -->
+      </van-tab>
       <div slot="nav-right" class="placeholder"></div>
       <div slot="nav-right" class="hamburger-btn">
         <i class="font_family icon-gengduo"></i>
@@ -28,43 +30,47 @@
 </template>
 
 <script>
-import {getUserChannel} from '@/api/user'
+import { getUserChannel } from '@/api/user';
+import ArticleList from './components/article-list';
 export default {
   name: 'HomeIndex',
-  components: {},
+  components: {
+    ArticleList
+  },
   props: {},
   data() {
     return {
       active: 0,
-      channels:[]  // 频道列表
+      channels: [], // 频道列表
     };
   },
   computed: {},
   watch: {},
   created() {
     // 加载用户数据
-    this.loadChannels()
+    this.loadChannels();
   },
   mounted() {},
   methods: {
-  async  loadChannels(){
-    try {
-      const {data } = await getUserChannel()
-      // console.log(data);
-      this.channels = data.data.channels
-    } catch (err) {
-      this.$toast('获取频道数据失败')
-    }
-  }
+    async loadChannels() {
+      try {
+        const { data } = await getUserChannel();
+        // console.log(data);
+        this.channels = data.data.channels;
+      } catch (err) {
+        this.$toast('获取频道数据失败');
+      }
+    },
   },
 };
 </script>
 <style scoped lang="less">
 .home-container {
+  padding-bottom: 100px;
   /deep/ .van-nav-bar__title {
-    max-width: 100%;
+    // max-width: 100%;
     // 意思就是不要设置最大宽度
-    // max-width: unset !important;
+    max-width: unset !important;
   }
   .search-btn {
     width: 555px;
@@ -100,17 +106,17 @@ export default {
       background-color: #3296fa;
     }
 
-    .placeholder{
+    .placeholder {
       // 不让参加剩余空间计算
-       flex-shrink: 0;
-        width: 66px;
-        height: 82px;
+      flex-shrink: 0;
+      width: 66px;
+      height: 82px;
     }
     .hamburger-btn {
       position: fixed;
       right: 0;
       display: flex;
-      justify-content:center;
+      justify-content: center;
       align-items: center;
       width: 66px;
       height: 82px;
@@ -120,7 +126,7 @@ export default {
         font-size: 33px;
       }
       &::before {
-        content:'';
+        content: '';
         position: absolute;
         left: 0;
         width: 1px;
