@@ -10,7 +10,10 @@
     v-model="loading"
     :finished="finished"
     finished-text="没有更多了"
-    @load="onLoad">
+     :error.sync="error"
+      error-text="请求失败，点击重新加载"
+    @load="onLoad"
+    >
       <van-cell
       v-for="(article,index) in list"
       :key="index"
@@ -36,7 +39,8 @@ export default {
       list: [],  // 存储列表数据的数组
       loading: false, // 控制加载中 loading状态
       finished: false, // 控制数据加载结束的状态
-      timestamp : null // 请求获取下一页数据的时间戳
+      timestamp : null, // 请求获取下一页数据的时间戳
+      error: false // 控制列表加载失败的提示状态
     };
   },
   methods: {
@@ -52,7 +56,11 @@ export default {
             // 是否包含置顶，进入页面第一次请求时要包含置顶文章，1-包含置顶，0-不包含
             with_top: 1
           })
-          console.log(data);
+          // 模拟随机失败的情况
+          // if (Math.random() > 0.5) {
+          //   JSON.parse('dsnajndjsa')
+          // }
+          // console.log(data);
            // 2.把请求结果数据放到 list 数组中
           const { results } = data.data
           // 数组的展开操作符 它会把数组元素一个一个拿出来
@@ -67,8 +75,13 @@ export default {
           // 木有数据了 将finished 设置为true  不再load 加载更多了
           this.finished = true
         }
-      } catch (err) {
-        console.log('请求失败',err);
+      } catch (error) {
+        // console.log('请求失败',err);
+        // this.$toast('请求失败了')
+        // 展示错误提示状态
+        this.error = true
+        // 请求失败了 loading 需要关闭
+        this.loading = false
       }
 
     }
