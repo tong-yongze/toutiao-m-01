@@ -58,7 +58,7 @@ export default {
         // console.log(data);
         this.channels = data.data.channels;
       } catch (err) {
-        this.$toast('获取频道数据失败');
+        this.$toast('获取频道数据失败!');
       }
     },
   },
