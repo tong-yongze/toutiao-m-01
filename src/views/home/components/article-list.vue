@@ -12,14 +12,16 @@
     finished-text="没有更多了"
     @load="onLoad">
       <van-cell
-      v-for="item in list"
-      :key="item"
-      :title="item" />
+      v-for="(article,index) in list"
+      :key="index"
+      :title="article.title" />
     </van-list>
   </div>
 </template>
 
 <script>
+import {getArticles} from '@/api/article'
+
 export default {
   name: 'ArticleList',
   components: {},
@@ -34,31 +36,41 @@ export default {
       list: [],  // 存储列表数据的数组
       loading: false, // 控制加载中 loading状态
       finished: false, // 控制数据加载结束的状态
+      timestamp : null // 请求获取下一页数据的时间戳
     };
   },
   methods: {
-     onLoad () {
-       // 初始话或到滚动到 底部的时候会触发调用 onload
-       console.log('onLoad');
-      // 异步更新数据
-      // 1.请求获取数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        // 2. 把请求结果数据放到list 数组中
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1);
+    async onLoad () {
+      try {
+          // 1.请求获取数据
+          const {data} = await getArticles({
+            channel_id: this.channel.id,   // 频道ID
+            // 请求数据的页码
+            // 请求第1页数据：当前最新时间戳
+            // 用于请求之后数据的时间戳会在当前请求结果中返回给你
+            timestamp: this.timestamp || Date.now(), // 时间戳 请求新的推荐数据传当前的时间戳
+            // 是否包含置顶，进入页面第一次请求时要包含置顶文章，1-包含置顶，0-不包含
+            with_top: 1
+          })
+          console.log(data);
+           // 2.把请求结果数据放到 list 数组中
+          const { results } = data.data
+          // 数组的展开操作符 它会把数组元素一个一个拿出来
+          this.list.push(...results)
+          // 3.本次数据加载结束之后 要把加载状态设置为结束
+            this.loading = false
+          // 4.判断数据是否全部加载完成
+        if(results.length) {
+          // 更新获取下一页的时间戳
+          this.timestamp = data.data.pre_timestamp
+        } else {
+          // 木有数据了 将finished 设置为true  不再load 加载更多了
+          this.finished = true
         }
+      } catch (err) {
+        console.log('请求失败',err);
+      }
 
-        // 3.本次数据加载结束之后 要把加载状态设置为结束
-        // loading 关闭以后才能触发下一个加载
-        this.loading = false
-
-        // 4.判断数据是否全部加载完成
-        if (this.list.length >= 40) {
-          // 如果木有数据了 把finished 设置为 true   之后就不会触发 加载更多
-          this.finished  = true
-        }
-      }, 1000)
     }
   }
 }
