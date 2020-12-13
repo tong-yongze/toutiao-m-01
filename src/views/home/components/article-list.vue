@@ -6,6 +6,10 @@
      <!--
        List 组件通过 loading 和 finished 两个变量控制加载状态，当组件滚动到底部时，会触发 load 事件并将 loading 设置成 true。此时可以发起异步操作并更新数据，数据更新完毕后，将 loading 设置成 false 即可。若数据已全部加载完毕，则直接将 finished 设置成 true 即可。
       -->
+    <van-pull-refresh
+    v-model="isreFreshLoading"
+    @refresh="onRefresh"
+    >
     <van-list
     v-model="loading"
     :finished="finished"
@@ -19,6 +23,7 @@
       :key="index"
       :title="article.title" />
     </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -40,7 +45,8 @@ export default {
       loading: false, // 控制加载中 loading状态
       finished: false, // 控制数据加载结束的状态
       timestamp : null, // 请求获取下一页数据的时间戳
-      error: false // 控制列表加载失败的提示状态
+      error: false, // 控制列表加载失败的提示状态
+      isreFreshLoading :false  // 控制下拉刷新的 loading 状态
     };
   },
   methods: {
