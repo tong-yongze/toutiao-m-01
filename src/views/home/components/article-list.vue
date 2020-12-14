@@ -125,4 +125,11 @@ export default {
 }
 </script>
 
-<style lang="less"></style>
+<style scoped lang="less">
+.article-list {
+  // 百分比单位是相当于父元素的
+  // height: 100%;
+  height: 79vh;
+  overflow-y: auto;
+}
+</style>
