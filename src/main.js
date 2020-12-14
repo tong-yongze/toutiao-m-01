@@ -15,6 +15,9 @@ import 'amfe-flexible'
 // 加载全局样式
 import './styles/index.less'
 
+// 加载 dayjs 初始化配置
+import './utils/dayjs'
+
 // 注册使用 Vant 组件库
 Vue.use(Vant)
 
