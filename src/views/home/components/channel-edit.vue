@@ -19,8 +19,21 @@
     v-for="(channel,index) in myChannels"
     :key="index"
     icon ="clear"
-    :text="channel.name"
-    />
+    >
+    <!--
+      v-bind：class 语法
+      一个对象：对象中的 key 表示要作用的 CSS 类名
+               对象中的 value 要计算出布尔值
+               true 则作用该类名
+               false 不作用类名
+               第一个active 是class类名  第二个active 是父组件传下来的 props 数据   index 是点击的某某某
+     -->
+    <span
+    class="text"
+    :class="{ active: index === active}"
+    slot="text"
+    >{{ channel.name }}</span>
+    </van-grid-item>
   </van-grid>
 
   <!-- 频道推荐 -->
@@ -48,6 +61,10 @@ export default {
     myChannels: {
       type: Array,
       required: true
+    },
+    active:{
+      type: Number,
+      required:  true
     }
   },
   data () {
@@ -81,10 +98,13 @@ export default {
     .van-grid-item__content {
     white-space: nowrap;
     background-color: #f4f5f6;
-    .van-grid-item__text {
+    .van-grid-item__text , .text{
       font-size: 28px;
       color: #222;
       margin-top: 0;
+    }
+    .active {
+      color: red;
     }
     }
   }

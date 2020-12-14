@@ -37,7 +37,9 @@
       position="bottom"
       :style="{ height: '100%' }"
     >
-    <channel-edit :my-channels = "channels" />
+    <channel-edit :my-channels = "channels"
+      :active = "active"
+    />
     </van-popup>
     <!-- /频道编辑弹出层 -->
   </div>
