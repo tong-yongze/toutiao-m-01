@@ -61,7 +61,10 @@
 </template>
 
 <script>
-import {getAllChannels} from '@/api/channel'
+import { getAllChannels ,addUserChannel } from '@/api/channel'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/storage'
+
 export default {
   name: 'ChannelEdit',
   components: {},
@@ -83,6 +86,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
     // 计算属性会观测内部依赖数据的变化  如果变化 就会重新执行
     // 最简单的 lodash  用法 ：
     /* let r = _.difference([2, 1, 3, 5], [2, 8]);
@@ -152,10 +156,27 @@ export default {
       this.$toast('数据获取失败')
     }
   },
-  onAddChannel (channel) {
+async onAddChannel (channel) {
     // console.log(channel); 点击可以拿到推荐频道的数据
     this.myChannels.push(channel)
+
+    // 数据持久化处理
+    if(this.user) {
+      try {
+          // 已登录 把数据请求接口放到线上
+      await addUserChannel({
+       id: channel.id, // 频道id
+       seq: this.myChannels.length // 序号
+    })
+      } catch (err) {
+        this.$toast('保存失败，请稍后重试')
+      }
+    } else {
+    // 未登录 把数据存储到本地
+    setItem('TOUTIAO_CHANNELS',this.myChannels)
+    }
   },
+
   onMyChannelClick (channel,index) {
     if(this.isEdit) {
       // 1. 如果是固定频道 则不删除
