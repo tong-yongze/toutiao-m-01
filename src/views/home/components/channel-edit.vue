@@ -8,7 +8,8 @@
       plain
       round
       size="mini"
-      >编辑</van-button>
+      @click="isEdit = !isEdit"
+      >{{ isEdit ? '完成' : '编辑' }}</van-button>
     </van-cell>
     <van-grid
     class="my-grid"
@@ -18,7 +19,6 @@
     class="grid-item"
     v-for="(channel,index) in myChannels"
     :key="index"
-    icon ="clear"
     >
     <!--
       v-bind：class 语法
@@ -28,6 +28,11 @@
                false 不作用类名
                第一个active 是class类名  第二个active 是父组件传下来的 props 数据   index 是点击的某某某
      -->
+     <van-icon
+     v-show="isEdit && !fiexChannels.includes(channel.id)"
+     slot="icon"
+     name="clear"
+     ></van-icon>
     <span
     class="text"
     :class="{ active: index === active}"
@@ -47,6 +52,7 @@
     :key="index"
     icon="plus"
     :text="channel.name"
+    @click="onAddChannel(channel)"
     />
   </van-grid>
   <!-- /频道推荐 -->
@@ -71,6 +77,8 @@ export default {
   data () {
     return {
       allChannels: [] ,// 所有频道
+      isEdit: false, // 控制编辑状态的显示
+      fiexChannels: [0,11] // 固定频道，不允许删除
     }
   },
   computed: {
@@ -86,7 +94,7 @@ export default {
     // 第三种方法 通过返回值 return
     //  recommendChannels () {
     //  return  this.allChannels.filter(item => {
-    //  // 如果说 item 在 my 里面里面找不到，就保留
+    //  // 如果说 item 在 myChannels 里面找不到，就保留
     //  // 返回值是 undefined 的时候就是找不到
     //  let res = this.myChannels.find(channel => item.id === channel.id);
     //  return !res
@@ -141,6 +149,10 @@ export default {
     } catch (err) {
       this.$toast('数据获取失败')
     }
+  },
+  onAddChannel (channel) {
+    // console.log(channel); 点击可以拿到推荐频道的数据
+    this.myChannels.push(channel)
   }
   }
 }
@@ -173,6 +185,9 @@ export default {
     }
     .active {
       color: red;
+    }
+    .van-grid-item__icon-wrapper {
+      position: unset;
     }
     }
   }
