@@ -43,10 +43,10 @@
     <van-grid class="recommend-grid" :gutter="10">
     <van-grid-item
      class="grid-item"
-    v-for="value in 8"
-    :key="value"
+    v-for="(channel,index) in recommendChannels"
+    :key="index"
     icon="plus"
-    text="hello world"
+    :text="channel.name"
     />
   </van-grid>
   <!-- /频道推荐 -->
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import {getAllChannels} from '@/api/channel'
 export default {
   name: 'ChannelEdit',
   components: {},
@@ -68,13 +69,63 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      allChannels: [] // 所有频道
+    }
   },
-  computed: {},
+  computed: {
+    recommendChannels (){
+      // 数组的filter 方法： 遍历数组 ，把符合条件的元素存储到新数组
+      return this.allChannels.filter(channel => {
+        // const channels = []  这是是filter 内部创建了一个空数组
+
+        // 数组的find 方法：遍历数组，把符合条件的第 1 个元素返回
+        // 如果 channel 不属于 myChannels 才把它return 收集到上面的数组
+        // 代码运算结果如果是true channel 放到 数组里面 如果是false 就不收集
+        return !this.myChannels.find(myChannel => {
+          return myChannel.id === channel.id
+        })
+      })
+    }
+
+
+
+    // 第一种方法
+    // recommendChannels (){
+    //   const channels = [] // 存储频道推荐的数组
+    //   // 核心思路:所有频道-用户频道 = 推荐频道
+    //   // 每遍历一次 就问我的频道中包含 这个channel 频道嘛 不包含我就要 包含就不要了
+    //   this.allChannels.forEach(channel =>{
+    //     // find 遍历数组 找到满足条件的元素
+    //     // 遍历myChannels 数组 每遍历一次就问当前我的频道 等于你这个channel id吗 如果是 返回满足该条件的元素(就返回给我的myChannels 频道) 遍历就停止了
+    //     const ret = this.myChannels.find(myChannel => {
+    //         return myChannel.id === channel.id
+    //       })
+    //       // 如果我的频道中不包含该频道项 channel 则收集到推荐频道中 把满足条件的push到 channels中
+    //       if(!ret) {
+    //         channels.push(channel)
+    //       }
+    //   })
+    //   // 把计算结果返回给存储的数组
+    //   return channels
+    // }
+  },
   watch: {},
-  created () {},
+  created () {
+    this.loadAllChannels()
+  },
   mounted () {},
-  methods: {}
+  methods: {
+  async  loadAllChannels(){
+    try {
+      const {data} = await getAllChannels()
+      // console.log(data);
+      this.allChannels = data.data.channels
+    } catch (err) {
+      this.$toast('数据获取失败')
+    }
+  }
+  }
 }
 </script>
 
