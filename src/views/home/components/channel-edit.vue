@@ -30,7 +30,7 @@
                第一个active 是class类名  第二个active 是父组件传下来的 props 数据   index 是点击的某某某
      -->
      <van-icon
-     v-show="isEdit && !fiexChannels.includes(channel.id)"
+     v-show="isEdit && !fiexdChannels.includes(channel.id)"
      slot="icon"
      name="clear"
      ></van-icon>
@@ -79,10 +79,11 @@ export default {
     return {
       allChannels: [] ,// 所有频道
       isEdit: false, // 控制编辑状态的显示
-      fiexChannels: [0,11] // 固定频道，不允许删除
+      fiexdChannels: [0] // 固定频道，不允许删除
     }
   },
   computed: {
+    // 计算属性会观测内部依赖数据的变化  如果变化 就会重新执行
     // 最简单的 lodash  用法 ：
     /* let r = _.difference([2, 1, 3, 5], [2, 8]);
         console.log(r); */
@@ -157,10 +158,23 @@ export default {
   },
   onMyChannelClick (channel,index) {
     if(this.isEdit) {
-      // 编辑状态 执行删除频道
+      // 1. 如果是固定频道 则不删除
+      if(this.fiexdChannels.includes(channel.id)){
+        return
+      }
+       // 2. 删除频道项
+      this.myChannels.splice(index, 1)
+      //  3. 如果删除的频道是激活频道之前的频道，则更新激活的频道项
+      // 参数1: 要删除的元素的开始索引
+      // 参数2： 删除的个数 如果不指定 则就从1开始一直删除
+      if(index <= this.active) {
+        // 让激活频道的索引 -1
+        this.$emit('update-active',this.active - 1, true)
+      }
+
     } else {
       // 非编辑状态，执行切换频道
-      this.$emit('update-active',index)
+      this.$emit('update-active',index ,false)
     }
   }
   }
