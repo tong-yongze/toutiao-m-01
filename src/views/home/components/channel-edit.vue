@@ -70,27 +70,44 @@ export default {
   },
   data () {
     return {
-      allChannels: [] // 所有频道
+      allChannels: [] ,// 所有频道
     }
   },
   computed: {
-    recommendChannels (){
-      // 数组的filter 方法： 遍历数组 ，把符合条件的元素存储到新数组
-      return this.allChannels.filter(channel => {
-        // const channels = []  这是是filter 内部创建了一个空数组
-
-        // 数组的find 方法：遍历数组，把符合条件的第 1 个元素返回
-        // 如果 channel 不属于 myChannels 才把它return 收集到上面的数组
-        // 代码运算结果如果是true channel 放到 数组里面 如果是false 就不收集
-        return !this.myChannels.find(myChannel => {
-          return myChannel.id === channel.id
-        })
-      })
+    // 最简单的 lodash  用法 ：
+    /* let r = _.difference([2, 1, 3, 5], [2, 8]);
+        console.log(r); */
+    //  _.differenceBy([{ 'x': 2 }, { 'x': 1 }], [{ 'x': 1 }], 'x');
+    // => [{ 'x': 2 }]
+    recommendChannels () {
+    const _ = require('lodash')
+    return _.differenceBy(this.allChannels, this.myChannels, 'id');
     }
+    // 第三种方法 通过返回值 return
+    //  recommendChannels () {
+    //  return  this.allChannels.filter(item => {
+    //  // 如果说 item 在 my 里面里面找不到，就保留
+    //  // 返回值是 undefined 的时候就是找不到
+    //  let res = this.myChannels.find(channel => item.id === channel.id);
+    //  return !res
+    // });
+    //     }
 
+    // 第二种方法  简化第一种
+    // recommendChannels(){
+    //   // 数组的filter 方法： 遍历数组 ，把符合条件的元素存储到新数组
+    //   return this.allChannels.filter(channel => {
+    //     // const channels = []  这是是filter 内部创建了一个空数组
 
-
-    // 第一种方法
+    //     // 数组的find 方法：遍历数组，把符合条件的第 1 个元素返回
+    //     // 如果 channel 不属于 myChannels 才把它return 收集到上面的数组
+    //     // 代码运算结果如果是true channel 放到 数组里面 如果是false 就不收集
+    //     return !this.myChannels.find(myChannel => {
+    //       return myChannel.id === channel.id
+    //     })
+    //   })
+    // }
+    // 第一种方法 2次遍历 复杂
     // recommendChannels (){
     //   const channels = [] // 存储频道推荐的数组
     //   // 核心思路:所有频道-用户频道 = 推荐频道
