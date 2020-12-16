@@ -12,7 +12,13 @@
       通过 animated 属性可以开启切换标签内容时的转场动画。
       通过 swipeable 属性可以开启滑动切换标签页。
      -->
-    <van-tabs class="channel-tabs" v-model="active" animated swipeable>
+    <van-tabs
+    class="channel-tabs"
+    v-model="active"
+    animated
+    swipeable
+    swipe-threshold
+    >
       <van-tab :title="channel.name"
       v-for="channel in channels"
       :key="channel.id">
