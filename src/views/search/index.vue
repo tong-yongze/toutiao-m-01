@@ -22,7 +22,10 @@
     <!-- /搜索结果 -->
 
     <!-- 联想建议 -->
-    <search-suggestion v-else-if="searchText"/>
+    <search-suggestion
+    v-else-if="searchText"
+    :search-text = "searchText"
+    />
     <!-- /联想建议 -->
 
     <!-- 搜索历史记录 -->
@@ -41,6 +44,9 @@ export default {
     SearchHistory,
     SearchResult,
     SearchSuggestion
+  },
+  props: {
+
   },
   data() {
     return {
