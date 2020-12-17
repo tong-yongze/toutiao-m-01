@@ -4,7 +4,7 @@
     <!--
       Tips: 在 van-search 外层增加 form 标签，且 action 不为空，即可在 iOS 输入法中显示搜索按钮。
      -->
-    <form action="/">
+    <form class="search-form" action="/">
       <van-search
       v-model="searchText"
       show-action
@@ -18,18 +18,25 @@
     <!-- /搜索栏 -->
 
     <!-- 搜索结果 -->
-    <search-result v-if="isResultShow" />
+    <search-result
+    v-if="isResultShow"
+     :search-text = "searchText"
+    />
     <!-- /搜索结果 -->
 
     <!-- 联想建议 -->
     <search-suggestion
     v-else-if="searchText"
     :search-text = "searchText"
+    @search="onSearch"
     />
     <!-- /联想建议 -->
 
     <!-- 搜索历史记录 -->
-    <search-history v-else />
+    <search-history
+    v-else
+    :search-histories = "searchHistories"
+    />
     <!-- /搜索历史记录 -->
   </div>
 </template>
@@ -51,13 +58,23 @@ export default {
   data() {
     return {
        searchText: '',
-       isResultShow : false // 控制搜索结果的展示
+       isResultShow : false, // 控制搜索结果的展示
+       searchHistories: []  //搜索的历史记录数据
     }
   },
    methods: {
     onSearch(val) {
-      console.log(val);
-      this.isResultShow = true  // 展示搜索结果
+      // 更新文本框内容
+      this.searchText = val
+      // 存储搜索历史记录
+      // 要求：不能有重复的历史记录 最新的搜索记录排在最前面
+      const index = this.searchHistories.indexOf(val)
+      if(index !== -1 ) {
+        this.searchHistories.splice(index,1)
+      }
+      this.searchHistories.unshift(val)
+      // 渲染搜索结果
+      this.isResultShow = true
     },
     onCancel() {
       this.$router.back()
@@ -67,8 +84,16 @@ export default {
 </script>
 <style scoped lang="less">
 .search-container {
+  padding-top: 108px;
     .van-search__action {
       color: #fff;
+    }
+    .search-form {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1;
     }
 }
 
