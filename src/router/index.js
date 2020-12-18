@@ -47,8 +47,9 @@ const routes = [
     path: '/article/:articleId',
     name: 'article',
     component: () => import('@/views/article'),
-    props: true  // 开始 props 传参 把路由参数映射到组件的props 数据中
-  },
+    // 将路由动态参数映射到组件的 props 中，更推荐这种做法
+    props: true
+  }
 ]
 
 const router = new VueRouter({

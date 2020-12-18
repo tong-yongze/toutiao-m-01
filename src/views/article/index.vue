@@ -101,12 +101,14 @@
 </template>
 
 <script>
+import { getArticleById } from '@/api/article'
+
 export default {
   name: 'ArticleIndex',
   components: {},
   props: {
     articleId: {
-      type: [Number, String],
+      type: [Number, String, Object],
       required: true
     }
   },
@@ -115,9 +117,20 @@ export default {
   },
   computed: {},
   watch: {},
-  created () {},
+  created () {
+    this.loadArticle()
+  },
   mounted () {},
-  methods: {}
+  methods: {
+    async loadArticle () {
+     try {
+        const { data } = await getArticleById(this.articleId)
+       console.log(data);
+     } catch (err) {
+       console.log('数据获取失败', err);
+     }
+    }
+  }
 }
 </script>
 

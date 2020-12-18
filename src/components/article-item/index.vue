@@ -46,10 +46,12 @@
 export default {
   name: 'ArticleItem',
   data() {
-    return {};
+    return {
+
+    };
   },
   props: {
-    articleId: {
+    article: {
       type: Object,
       required: true,
     },
