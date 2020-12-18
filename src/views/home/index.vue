@@ -70,7 +70,7 @@ export default {
     return {
       active: 0,
       channels: [], // 频道列表
-      isChennelEditShow: true  // 控制编辑频道弹出层的显示状态
+      isChennelEditShow: false  // 控制编辑频道弹出层的显示状态
     };
   },
   computed: {

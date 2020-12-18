@@ -3,14 +3,16 @@
     <!-- 导航栏 -->
     <van-nav-bar
       class="page-nav-bar"
-      left-arrow
+
       title="黑马头条"
-    ></van-nav-bar>
+    >
+    <van-icon slot="left" name="arrow-left" color @click="$router.back()"/>
+    </van-nav-bar>
     <!-- /导航栏 -->
 
-    <div class="main-wrap">
+    <div  class="main-wrap">
       <!-- 加载中 -->
-      <div class="loading-wrap">
+      <div class="loading-wrap"  v-if="loading">
         <van-loading
           color="#3296fa"
           vertical
@@ -19,9 +21,9 @@
       <!-- /加载中 -->
 
       <!-- 加载完成-文章详情 -->
-      <div class="article-detail">
+      <div v-else-if="article.title" class="article-detail">
         <!-- 文章标题 -->
-        <h1 class="article-title">这是文章标题</h1>
+        <h1 class="article-title">{{article.title}}</h1>
         <!-- /文章标题 -->
 
         <!-- 用户信息 -->
@@ -31,10 +33,10 @@
             slot="icon"
             round
             fit="cover"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            :src="article.aut_photo"
           />
-          <div slot="title" class="user-name">黑马头条号</div>
-          <div slot="label" class="publish-date">14小时前</div>
+          <div slot="title" class="user-name">{{article.aut_name}}</div>
+          <div slot="label" class="publish-date">{{article.pubdate | relativeTime}}</div>
           <van-button
             class="follow-btn"
             type="info"
@@ -52,23 +54,24 @@
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
-        <div class="article-content">这是文章内容</div>
+        <div class="article-content" v-html="article.content"></div>
         <van-divider>正文结束</van-divider>
       </div>
       <!-- /加载完成-文章详情 -->
 
+
       <!-- 加载失败：404 -->
-      <div class="error-wrap">
+      <div v-else-if="errStatus === 404" class="error-wrap" >
         <van-icon name="failure" />
         <p class="text">该资源不存在或已删除！</p>
       </div>
       <!-- /加载失败：404 -->
 
       <!-- 加载失败：其它未知错误（例如网络原因或服务端异常） -->
-      <div class="error-wrap">
+      <div class="error-wrap" v-else>
         <van-icon name="failure" />
         <p class="text">内容加载失败！</p>
-        <van-button class="retry-btn">点击重试</van-button>
+        <van-button class="retry-btn" @click="loadArticle">点击重试</van-button>
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
@@ -109,11 +112,16 @@ export default {
   props: {
     articleId: {
       type: [Number, String, Object],
-      required: true
-    }
+      required: true,
+    },
+    color: '#fff'
   },
   data () {
-    return {}
+    return {
+      article: {}, //  文章详情
+      loading: false, // 加载中的 loadding 状态
+      errStatus: 0   // 失败的状态码
+    }
   },
   computed: {},
   watch: {},
@@ -123,12 +131,27 @@ export default {
   mounted () {},
   methods: {
     async loadArticle () {
+      // 展示 loading 加载中
+      this.loadArticle = true
      try {
         const { data } = await getArticleById(this.articleId)
+       if( Math.random >0.5) {
+         JSON.parse('DSDSDSDSD')
+       }
+
+       this.article = data.data
+       // 请求成功 关闭loading
+       this.loading = false
        console.log(data);
      } catch (err) {
+       if(err.response && err.response.status === 404) {
+         this.errStatus = 404
+       }
+      //  this.loading = false
        console.log('数据获取失败', err);
      }
+     // 无论成功 或 失败 都需要关闭
+     this.loading = false
     }
   }
 }
