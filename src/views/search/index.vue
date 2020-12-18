@@ -36,6 +36,8 @@
     <search-history
     v-else
     :search-histories = "searchHistories"
+    @clear-search-histories = "searchHistories = []"
+    @search = 'onSearch'
     />
     <!-- /搜索历史记录 -->
   </div>
@@ -44,6 +46,7 @@
 import SearchHistory from './components/search-history'
 import SearchSuggestion from './components/search-suggestion'
 import SearchResult from './components/search-result'
+import { setItem, getItem } from '@/utils/storage'
 
 export default {
   name: 'SearchIndex',
@@ -59,8 +62,17 @@ export default {
     return {
        searchText: '',
        isResultShow : false, // 控制搜索结果的展示
-       searchHistories: []  //搜索的历史记录数据
+       searchHistories: getItem('TOUTIAO_SEARCH_HISTORIES') || [] //搜索的历史记录数据
     }
+  },
+  watch: {
+      searchHistories (value) {
+        setItem('TOUTIAO_SEARCH_HISTORIES',value)
+      }
+    // searchHistories:{
+    //   handler () {
+    //   }
+    // }  需要自定义更多配置 或 深度监听可用
   },
    methods: {
     onSearch(val) {
