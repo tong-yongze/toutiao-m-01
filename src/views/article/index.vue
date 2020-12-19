@@ -109,10 +109,15 @@
               :article-id = "article.art_id"
               />
 
-              <van-icon
+              <link-article
+              class="btn-item"
+              v-model="article.attitude"
+              :article-id = "article.art_id"
+              />
+              <!-- <van-icon
                 color="#777"
                 name="good-job-o"
-              />
+              /> -->
               <van-icon name="share" color="#777777"></van-icon>
             </div>
             <!-- /底部区域 -->
@@ -143,12 +148,14 @@ import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant';
 import  FollowUser  from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
+import LinkArticle from '@/components/link-article'
 
 export default {
   name: 'ArticleIndex',
   components: {
     FollowUser,
-    CollectArticle
+    CollectArticle,
+    LinkArticle
   },
   props: {
     articleId: {
