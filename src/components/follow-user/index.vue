@@ -1,7 +1,7 @@
 <template>
  <!--注意：模板只能有一个根节点 因为有个v-if 和else 只会有一个节点被渲染出来 -->
       <van-button
-            v-if="isFollowed"
+            v-if="value"
             class="follow-btn"
             round
             size="small"
@@ -27,13 +27,18 @@ import { addFollow, deleteFollow } from '@/api/user'
 
 export default {
     name:'FollowUser',
+    //  自定义 v-model 的数据名称  父组件不用做修改
+  //    model: {
+  //   prop: 'isFollowed',  默认是value
+  //   event: 'update-is_followed'  默认是 input
+  // },
     data(){
       return {
         loading: false
       }
     },
     props:{
-      isFollowed:{
+      value:{
         type: Boolean,
         required: true
       },
@@ -46,7 +51,7 @@ export default {
        async onFollow () {
           this.loading = true  //  一上来点击了就展示关注按钮的 loading
       try {
-        if(this.isFollowed) {
+        if(this.value) {
             // 已关注 取消关注
           deleteFollow(this.userId)  // 因接口问题 取消了 await
           //  await deleteFollow(this.article.aut_id)
@@ -60,7 +65,8 @@ export default {
 
         // 更新视图状态
         // this.article.is_followed = !this.article.is_followed
-        this.$emit('update-is_followed', !this.isFollowed)
+        // this.$emit('update-is_followed', !this.value)
+        this.$emit('input', !this.value)
       } catch (err) {
         let message = '操作失败，请重试！'
         if(err.response && err.response.status === 400) {

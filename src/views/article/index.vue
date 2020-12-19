@@ -39,12 +39,25 @@
           <div slot="label" class="publish-date">{{article.pubdate | relativeTime}}</div>
             <!--
               $event 是事件参数 通过子组件中的 $emit 中的第二个参数传递过来的
+              当我们传递给子组件的数据既要使用还要修改
+              传递: props
+                  :is-followed = "article.is_followed"
+              修改：自定义事件
+               @update-is_followed = "article.is_followed = $event"
+               简写方式： 在组件上使用 v-model
+               value= "article.is_followed"
+               @input= " article.is_followed = $event"
+
+              如果需要修改 v-model 的规则名称  可以通过子组件的model 修改
+              一个组件只能用一次v-model
+              如果多个数据需要实现雷士 v-model效果 可以用属性的 .sync 修饰符
+
              -->
             <follow-user
-            :is-followed = "article.is_followed"
+            v-model="article.is_followed"
             class="follow-btn"
             :user-id = "article.aut_id"
-            @update-is_followed = "article.is_followed = $event"
+
             />
             <!-- <van-button
             v-if="article.is_followed"
