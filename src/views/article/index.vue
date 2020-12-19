@@ -37,7 +37,16 @@
           />
           <div slot="title" class="user-name">{{article.aut_name}}</div>
           <div slot="label" class="publish-date">{{article.pubdate | relativeTime}}</div>
-            <van-button
+            <!--
+              $event 是事件参数 通过子组件中的 $emit 中的第二个参数传递过来的
+             -->
+            <follow-user
+            :is-followed = "article.is_followed"
+            class="follow-btn"
+            :user-id = "article.aut_id"
+            @update-is_followed = "article.is_followed = $event"
+            />
+            <!-- <van-button
             v-if="article.is_followed"
             class="follow-btn"
             round
@@ -56,7 +65,7 @@
             icon="plus"
             @click="onFollow"
             :loading = "followLoading"
-          >关注</van-button>
+          >关注</van-button> -->
 
         </van-cell>
         <!-- /用户信息 -->
@@ -118,7 +127,7 @@
 <script>
 import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant';
-import { addFollow, deleteFollow } from '@/api/user'
+import  FollowUser  from '@/components/follow-user'
 
 // ImagePreview({
 //   images: [
@@ -134,7 +143,9 @@ import { addFollow, deleteFollow } from '@/api/user'
 
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: {
+    FollowUser
+  },
   props: {
     articleId: {
       type: [Number, String, Object],
@@ -162,9 +173,9 @@ export default {
       this.loadArticle = true
      try {
         const { data } = await getArticleById(this.articleId)
-       if( Math.random >0.5) {
-         JSON.parse('DSDSDSDSD')
-       }
+      //  if( Math.random >0.5) {
+      //    JSON.parse('DSDSDSDSD')
+      //  }
       // 数据驱动视图这件事不是立即的
        this.article = data.data
 
@@ -211,32 +222,7 @@ export default {
       // console.log(images);
     },
 
-   async onFollow () {
-     this.followLoading = true  //  一上来点击了就展示关注按钮的 loading
-      try {
-        if(this.article.is_followed) {
-            // 已关注 取消关注
-          deleteFollow(this.article.aut_id)  // 因接口问题 取消了 await
-          //  await deleteFollow(this.article.aut_id)
-            // this.article.is_followed = false
-        } else {
-           // 没有关注 添加关注
-        await addFollow(this.article.aut_id)
-        // console.log(data)
-        // this.article.is_followed = true
-        }
 
-        // 更新视图状态
-        this.article.is_followed = !this.article.is_followed
-      } catch (err) {
-        let message = '操作失败，请重试！'
-        if(err.response && err.response.status === 400) {
-          message = '你不能关注你自己！'
-        }
-        this.$toast(message)
-      }
-     this.followLoading =  false  // 关闭关注按钮的 loading
-    }
   }
 }
 </script>
