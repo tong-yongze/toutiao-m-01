@@ -54,7 +54,11 @@
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
-        <div class="article-content markdown-body " v-html="article.content"></div>
+        <div
+        class="article-content markdown-body "
+         v-html="article.content"
+         ref="article-content"
+         ></div>
         <van-divider>正文结束</van-divider>
       </div>
       <!-- /加载完成-文章详情 -->
@@ -105,6 +109,19 @@
 
 <script>
 import { getArticleById } from '@/api/article'
+import { ImagePreview } from 'vant';
+
+// ImagePreview({
+//   images: [
+//     'https://img.yzcdn.cn/vant/apple-1.jpg',
+//     'https://img.yzcdn.cn/vant/apple-2.jpg',
+//   ],
+//   // 起始位置 从0 开始
+//   startPosition: 1,
+//   onClose() {
+//     console.log('onClose');
+//   }
+// });
 
 export default {
   name: 'ArticleIndex',
@@ -138,8 +155,15 @@ export default {
        if( Math.random >0.5) {
          JSON.parse('DSDSDSDSD')
        }
-
+      // 数据驱动视图这件事不是立即的
        this.article = data.data
+
+       // 初始化图片点击浏览
+      //  console.log(this.$refs['article-content'])
+      setTimeout(() => {
+       this.previewImage()
+      }, 0);
+
        // 请求成功 关闭loading
        this.loading = false
        console.log(data);
@@ -152,6 +176,27 @@ export default {
      }
      // 无论成功 或 失败 都需要关闭
      this.loading = false
+    },
+    previewImage () {
+      // 得到所有的 img 节点
+      const articleContent = this.$refs['article-content']
+      const imgs = articleContent.querySelectorAll('img')
+      // console.log(imgs);
+      // 获取 所有 img 地址
+      const images = []
+      imgs.forEach((img, index) => {
+        images.push(img.src)
+        img.onclick = () =>{
+        ImagePreview({
+          // 预览得图片地址数组
+          images,
+          // 起始位置 从0 开始
+          startPosition: index,
+        });
+        }
+      })
+
+      // console.log(images);
     }
   }
 }
