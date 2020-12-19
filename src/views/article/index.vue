@@ -90,6 +90,32 @@
          ref="article-content"
          ></div>
         <van-divider>正文结束</van-divider>
+        <!-- 底部区域 -->
+            <div class="article-bottom">
+              <van-button
+                class="comment-btn"
+                type="default"
+                round
+                size="small"
+              >写评论</van-button>
+              <van-icon
+                name="comment-o"
+                info="123"
+                color="#777"
+              />
+              <collect-article
+              class="btn-item"
+              v-model="article.is_collected"
+              :article-id = "article.art_id"
+              />
+
+              <van-icon
+                color="#777"
+                name="good-job-o"
+              />
+              <van-icon name="share" color="#777777"></van-icon>
+            </div>
+            <!-- /底部区域 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -109,31 +135,6 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
-
-    <!-- 底部区域 -->
-    <div class="article-bottom">
-      <van-button
-        class="comment-btn"
-        type="default"
-        round
-        size="small"
-      >写评论</van-button>
-      <van-icon
-        name="comment-o"
-        info="123"
-        color="#777"
-      />
-      <van-icon
-        color="#777"
-        name="star-o"
-      />
-      <van-icon
-        color="#777"
-        name="good-job-o"
-      />
-      <van-icon name="share" color="#777777"></van-icon>
-    </div>
-    <!-- /底部区域 -->
   </div>
 </template>
 
@@ -141,23 +142,13 @@
 import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant';
 import  FollowUser  from '@/components/follow-user'
-
-// ImagePreview({
-//   images: [
-//     'https://img.yzcdn.cn/vant/apple-1.jpg',
-//     'https://img.yzcdn.cn/vant/apple-2.jpg',
-//   ],
-//   // 起始位置 从0 开始
-//   startPosition: 1,
-//   onClose() {
-//     console.log('onClose');
-//   }
-// });
+import CollectArticle from '@/components/collect-article'
 
 export default {
   name: 'ArticleIndex',
   components: {
-    FollowUser
+    FollowUser,
+    CollectArticle
   },
   props: {
     articleId: {
@@ -347,7 +338,7 @@ export default {
       line-height: 46px;
       color: #a7a7a7;
     }
-    .van-icon {
+     .van-icon {
       font-size: 40px;
       .van-info {
         font-size: 16px;
