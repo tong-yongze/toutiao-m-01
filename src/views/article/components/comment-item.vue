@@ -69,7 +69,7 @@ export default {
         await addCommentLike(this.comment.com_id)
           this.comment.like_count++
         }
-        // 取反 有这个点赞就显示  没有就不显示
+        // 取反 有这个点赞状态 就显示   没有则不显示
         this.comment.is_liking = !this.comment.is_liking
       } catch (err) {
         this.$toast('操作失败，请重试')

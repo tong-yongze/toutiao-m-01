@@ -25,13 +25,17 @@ export default {
       type: [Number, String, Object],
       required: true,
     },
+    list: {
+      type: Array,
+      default: () => [] // 给它一个默认值 如果父组件需要 就绑list 如果不需要还是一个数组
+    }
   },
   components: {
     CommentItem
   },
   data() {
     return {
-      list: [],
+      // list: [],
       loading: false,
       finished: false,
       offset: null, // 获取下一页数据的标记
