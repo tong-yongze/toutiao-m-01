@@ -132,6 +132,9 @@
             <!-- /底部区域 -->
 
           <!-- 发布评论 -->
+          <!--
+            :style 可以把那个20%换成data中的变量，变量改了，样式跟着改  如果没有使用变量，其实没必要用动态绑定
+           -->
             <van-popup
             v-model="isPostShow"
              position="bottom"
@@ -169,7 +172,16 @@
         position="bottom"
         :style="{ height: '100%' }"
         >
-      123
+        <!--
+          v-if 条件渲染
+           true：渲染元素节点
+           false：不渲染
+         -->
+      <comment-reply
+      v-if="isReplyShow"
+      :comment = "currentComment"
+      @close = "isReplyShow = false"
+      />
       </van-popup>
     <!-- /评论回复 -->
   </div>
@@ -183,6 +195,7 @@ import CollectArticle from '@/components/collect-article'
 import LinkArticle from '@/components/link-article'
 import CommentsList from './components/comment-list'
 import CommentPost from './components/comment-post'
+import CommentReply from './components/comment-reply'
 
 export default {
   name: 'ArticleIndex',
@@ -191,7 +204,8 @@ export default {
     CollectArticle,
     LinkArticle,
     CommentsList,
-    CommentPost
+    CommentPost,
+    CommentReply
   },
   props: {
     articleId: {
@@ -209,7 +223,8 @@ export default {
       totalCommentCount: 0,
       isPostShow: false, // 控制发布评论的显示状态
       commentList: [],  // 评论列表
-      isReplyShow: false  // 控制评论回复的弹层
+      isReplyShow: false , // 控制评论回复的弹层
+      currentComment: {}  // 当前点击回复的评论项
     }
   },
   computed: {},
@@ -279,8 +294,8 @@ export default {
       this.commentList.unshift(data.new_obj)
     },
     onReplyClick (comment) {
-      console.log(comment)
-
+      // console.log(comment)
+      this.currentComment = comment
       // 控制评论回复弹出层
       this.isReplyShow = true
     }
