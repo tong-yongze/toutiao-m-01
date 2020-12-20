@@ -90,6 +90,12 @@
          ref="article-content"
          ></div>
         <van-divider>正文结束</van-divider>
+        <!-- 文章评论列表 -->
+        <comments-list
+        :source = "article.art_id"
+        @onload-success = "totalCommentCount = $event.total_count"
+        />
+        <!-- /文章评论列表 -->
         <!-- 底部区域 -->
             <div class="article-bottom">
               <van-button
@@ -100,8 +106,9 @@
               >写评论</van-button>
               <van-icon
                 name="comment-o"
-                info="123"
+                :info="totalCommentCount"
                 color="#777"
+
               />
               <collect-article
               class="btn-item"
@@ -149,13 +156,15 @@ import { ImagePreview } from 'vant';
 import  FollowUser  from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
 import LinkArticle from '@/components/link-article'
+import CommentsList from './components/comment-list'
 
 export default {
   name: 'ArticleIndex',
   components: {
     FollowUser,
     CollectArticle,
-    LinkArticle
+    LinkArticle,
+    CommentsList
   },
   props: {
     articleId: {
@@ -169,7 +178,8 @@ export default {
       article: {}, //  文章详情
       loading: false, // 加载中的 loadding 状态
       errStatus: 0,  // 失败的状态码
-      followLoading: false  // 展示关注的loading
+      followLoading: false, // 展示关注的loading
+      totalCommentCount: 0
     }
   },
   computed: {},
@@ -198,7 +208,7 @@ export default {
 
        // 请求成功 关闭loading
        this.loading = false
-       console.log(data);
+      //  console.log(data);
      } catch (err) {
        if(err.response && err.response.status === 404) {
          this.errStatus = 404
