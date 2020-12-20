@@ -207,6 +207,12 @@ export default {
     CommentPost,
     CommentReply
   },
+  // 给所有的后代组件提供数据 provide 选项允许我们指定我们想要提供给后代组件的数据/方法
+  provide: function () {
+    return {
+      articleId: this.articleId,
+    }
+  },
   props: {
     articleId: {
       type: [Number, String, Object],
