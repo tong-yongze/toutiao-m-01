@@ -57,7 +57,6 @@
             v-model="article.is_followed"
             class="follow-btn"
             :user-id = "article.aut_id"
-
             />
             <!-- <van-button
             v-if="article.is_followed"
@@ -95,6 +94,7 @@
         :source = "article.art_id"
         :list= "commentList"
         @onload-success = "totalCommentCount = $event.total_count"
+        @reply-click = "onReplyClick"
         />
         <!-- /文章评论列表 -->
         <!-- 底部区域 -->
@@ -162,6 +162,16 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
+
+    <!-- 评论回复 -->
+      <van-popup
+        v-model="isReplyShow"
+        position="bottom"
+        :style="{ height: '100%' }"
+        >
+      123
+      </van-popup>
+    <!-- /评论回复 -->
   </div>
 </template>
 
@@ -198,7 +208,8 @@ export default {
       followLoading: false, // 展示关注的loading
       totalCommentCount: 0,
       isPostShow: false, // 控制发布评论的显示状态
-      commentList: []  // 评论列表
+      commentList: [],  // 评论列表
+      isReplyShow: false  // 控制评论回复的弹层
     }
   },
   computed: {},
@@ -266,6 +277,12 @@ export default {
       this.isPostShow = false
       // 将发布内容显示到列表顶部
       this.commentList.unshift(data.new_obj)
+    },
+    onReplyClick (comment) {
+      console.log(comment)
+
+      // 控制评论回复弹出层
+      this.isReplyShow = true
     }
   }
 }
