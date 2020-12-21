@@ -37,7 +37,12 @@
     style="height: 100%"
     position="bottom"
     >
-      <update-name @close = "isUpdateNameShow = false"/>
+    <!-- 这个 v-if 是随着上面的model中isUpdateNameShow 为true就渲染 否则反之 -->
+      <update-name
+      v-if="isUpdateNameShow"
+      @close = "isUpdateNameShow = false"
+      v-model="user.name"
+      />
     </van-popup>
     <!-- /编辑昵称 -->
   </div>
