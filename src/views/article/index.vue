@@ -141,6 +141,7 @@
              :style="{ height: '20%' }"
              >
              <comment-post
+             type = "a"
             :target = "article.art_id"
             @post-success = "onPostSuccess"
              />

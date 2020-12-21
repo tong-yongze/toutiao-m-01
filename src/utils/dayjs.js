@@ -18,7 +18,7 @@ dayjs.locale('zh-cn') // 全局使用
 // 管道符前面的表达式的结果会作为参数传递到过滤器函数中 过滤器返回值会渲染到使用过滤器的模板位置
 Vue.filter('relativeTime',value=>{
   // console.log(value); // 文章的原始发布时间
-  return dayjs().to(dayjs('2020'))
+  return dayjs().to(dayjs(value))
 })
 
 // dayjs() 获取当前最新时间

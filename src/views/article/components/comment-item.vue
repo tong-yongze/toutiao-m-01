@@ -23,7 +23,7 @@
     <div slot="label">
       <p class="comment-content">{{comment.content}}</p>
       <div class="bottom-info">
-        <span class="comment-pubdate">{{comment.pubdate | relativeTime}}</span>
+        <span class="comment-pubdate">{{comment.pubdate | relativeTime }}</span>
         <van-button
           class="reply-btn"
           round

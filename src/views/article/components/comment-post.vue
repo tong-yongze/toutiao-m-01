@@ -28,6 +28,10 @@ export default {
     target: {
       type:  [Number,String,Object],
       required: true
+    },
+    type: {
+      type: String,
+      default: null
     }
   },
    // 在任何后代组件里，我们都可以使用 inject 选项来接收指定的我们想要添加在这个实例上的 property
@@ -59,7 +63,9 @@ export default {
         target: this.target.toString(),    // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
         content: this.message,   // 评论内容
         // 如果它有值 就tostring() 没有就是个null  原封不动放着
-        art_id: this.articleId ? this.articleId.toString() : this.articleId // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数
+        // art_id: this.articleId ? this.articleId.toString() : this.articleId // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数
+        // art_id: this.articleId.toString() === this.target.toString() ? null : this.articleId.toString()
+        art_id: this.type === 'a' ? null : this.articleId   // 这种写法 需要在父组件index中的reply 文章评论模板中写type  在回复评论 reply中模板post中写 type 在本组件中 prop 写个type类型
       })
       console.log(data)
 

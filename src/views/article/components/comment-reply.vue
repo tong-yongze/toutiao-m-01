@@ -41,6 +41,7 @@
     <!-- 发布评论 -->
     <van-popup v-model="isPostShow" position="bottom">
       <comment-post
+      type="c"
       :target= 'comment.com_id'
       @post-success = "onPostSuccess"
       />
