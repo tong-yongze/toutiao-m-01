@@ -4,7 +4,7 @@
 import axios from 'axios';
 import store from '@/store/index';
 import JSONBig from 'json-bigint';
-
+import {Toast} from 'vant'
 
 // JSONBig 可以处理数据中的大数字问题
 // JSONBig.parse()  // 把 JSON 格式的字符串转为 js 对象
@@ -49,5 +49,25 @@ request.interceptors.request.use(
 );
 
 // 响应拦截器
+request.interceptors.response.use(function (response) {
+  return response
+}, function (error) {
+  const status = error.response.status
+  if (status === 400) {
+    Toast.fail('客户端请求参数错误')
+  } else if (status === 401) {
+    Toast.fail('无效的TOKEN')
+  } else if (status === 403) {
+    Toast.fail('客户端没有权限')
+  } else if (status === 404) {
+    Toast.fail('请求资源不存在')
+  } else if (status === 405) {
+    Toast.fail('请求方法不支持')
+  } else if (status >= 500) {
+    Toast.fail('服务器抽风了')
+  }
+  // 错误处理
+  return Promise.reject(error)
+})
 
 export default request;
