@@ -11,6 +11,7 @@
 <script>
 import 'cropperjs/dist/cropper.css';
 import Cropper from 'cropperjs';
+import { updateUserPhoto } from '@/api/user'
 
 export default {
   name: 'UpdatePhoto',
@@ -27,12 +28,12 @@ export default {
   },
   created() {},
   mounted() {
-    const image = this.$refs.img;
+    const image = this.$refs.img
     this.cropper = new Cropper(image, {
       viewMode: 1,   // 只能在画布内容当中
       dragMode: 'move',  // 拖动模式  可以拖动画布
       aspectRatio: 1,
-      autoCropArea: 1,
+      // autoCropArea: 1,
       cropBoxMovable: false,
       cropBoxResizable: false,
       background: false,
@@ -47,10 +48,44 @@ export default {
 
       // 纯客户端的裁切使用 getCroppedCanvas 获取裁切的文件对象
       this.cropper.getCroppedCanvas().toBlob(blob => {
-          // console.log(blob)
+          this.updateUserPhoto(blob)
       })
-    }
+    },
+     async updateUserPhoto (blob) {
+    this.$toast.loading({
+      message: '保存中...',
+      forbidClick: true,   // 展示loading中 禁止背景点击
+      duration: 0  // 持续展示  默认是2秒 当提示成功或失败 前面任何loading都会被关闭
+    })
+      try {
+        // console.log(blob)
+          // 错误的用法
+
+          // 如果接口要求是 Content-Type 是 application/ json
+          // 则传递普通 js 对象
+          // updateUserPhoto ({
+          //   photo: blob
+          // })
+
+          // 如果接口要求 Content-Type 是 multipart/ form-data
+          // 则你必须传递 FormData 对象
+          const formData = new FormData()
+          formData.append('photo',blob)
+
+        const { data } =await updateUserPhoto(formData)
+        // console.log(data)
+        // 关闭弹层
+        this.$emit('close')
+        // 更新视图
+        this.$emit('update-photo', data.data.photo)
+        // 提示成功
+        this.$toast.success('更新成功')
+      } catch (err) {
+        this.$toast.fail('更新失败')
+      }
   }
+  }
+
 }
 </script>
 

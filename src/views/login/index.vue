@@ -112,6 +112,8 @@ export default {
         // 登录成功，跳转回原来页面
         // back 的方式不严谨，后面会功能优化
         // this.$router.back()
+        // 所有跳转到登录页 都要求带一个redirect 参数
+        // 目的是登录成功后 还是跳转到来的地方
         this.$router.push(this.$route.query.redirect || '/');
       } catch (err) {
         if (err.response.status === 400) {
