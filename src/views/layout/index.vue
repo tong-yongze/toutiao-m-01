@@ -1,7 +1,9 @@
 <template>
   <div class="layout-container">
     <!-- 子路由出口 -->
-    <router-view />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
     <!-- /子路由出口 -->
 
     <!-- 标签导航栏 -->
@@ -36,12 +38,16 @@ export default {
   components: {},
   props: {},
   data() {
-    return {};
+    return {
+      active: 0
+    };
   },
   computed: {},
   watch: {},
   created() {},
-  mounted() {},
+  mounted() {
+    this.$store.commit('addCachePage','LayoutIndex')
+  },
   methods: {},
 };
 </script>

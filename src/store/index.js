@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     // 一个对象 存储当前登录用户信息 （token等数据）
     user: getItem(TOKEN_KEY),
+    cachePages: ['LayoutIndex']
     // user: JSON.parse(window.localStorage.getItem(TOKEN_KEY))
     // user: null
   },
@@ -19,6 +20,17 @@ export default new Vuex.Store({
       setItem(TOKEN_KEY, state.user);
       // window.localStorage.setItem(TOKEN_KEY,JSON.stringify(state.user))
     },
+    addCachePage(state, page) {
+      // 添加需要缓存的组件  如果不包含 就push
+      if (!state.cachePages.includes(page)){
+        state.cachePages.push(page)
+      }
+    },
+    removeCachePage(state, page) {
+      // 删除需要缓存的组件
+     const idx = state.cachePages.indexOf(page)
+     if(idx !== -1) state.cachePages.splice(idx,1)
+    }
   },
   actions: {},
   modules: {},

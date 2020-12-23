@@ -51,7 +51,8 @@
         name:'login',
         query:{
         redirect:'/my'
-        }})">
+        }
+        })">
         <img
         class="mobile-img"
         src="~@/assets/mobile.png" />

@@ -1,5 +1,5 @@
 <template>
-  <div class="article-list">
+  <div class="article-list" ref="article-list">
     <!--
       List 组件通过 loading 和 finished 两个变量控制加载状态，当组件滚动到底部时，会触发 load 事件并将 loading 设置成 true。此时可以发起异步操作并更新数据，数据更新完毕后，将 loading 设置成 false 即可。若数据已全部加载完毕，则直接将 finished 设置成 true 即可。
      -->
@@ -37,6 +37,8 @@
 <script>
 import {getArticles} from '@/api/article'
 import ArticleItem from '@/components/article-item'
+import { debounce } from 'lodash'
+
 export default {
   name: 'ArticleList',
   components: {
@@ -56,7 +58,8 @@ export default {
       timestamp : null, // 请求获取下一页数据的时间戳
       error: false, // 控制列表加载失败的提示状态
       isreFreshLoading :false,  // 控制下拉刷新的 loading 状态
-      refresgSuccessText: '刷新成功' // 下拉刷新成功提示文本
+      refresgSuccessText: '刷新成功', // 下拉刷新成功提示文本
+      scrollT: 0
     };
   },
   methods: {
@@ -128,7 +131,23 @@ export default {
 
     }
     }
-  }
+  },
+  mounted() {
+    // 1.滚动的时候 记录一下滚动的位置
+    const articleList = this.$refs['article-list']  // 获取文章列表
+    articleList.onscroll = debounce(()=> {
+      // console.log(articleList.scrollTop)
+      this.scrollT = articleList.scrollTop
+    },100)
+  },
+  activated() {
+    // 从缓存当中激活的时候触发
+    // 2. 当组件从缓存列表当中激活的时候 把上次记录的位置给 article-list 的 scrollTop
+     this.$refs['article-list'].scrollTop = this.scrollT
+  },
+  deactivated() {
+    // 从缓存当中失活的时候触发
+  },
 }
 </script>
 
