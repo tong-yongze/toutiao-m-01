@@ -12,7 +12,7 @@ import router from '@/router';
 // JSONbig.stringify()  // 把 js 对象 转为 JSON 格式的字符串
 
 const request = axios.create({
-  // baseURL: 'http://ttapi.research.itcast.cn/', // 基础路径
+  baseURL: 'http://ttapi.research.itcast.cn/', // vue 基础路径
 
   // 自定义后端返回的原始数据
   // data： 后端返回的原始数据 就是 JSON 格式的字符串
