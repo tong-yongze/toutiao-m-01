@@ -163,7 +163,7 @@ export default {
   }
 
   .send-sms-btn {
-    width: 152px;
+    // width: 152px;
     height: 46px;
     line-height: 46px;
     background-color: #ededed;
